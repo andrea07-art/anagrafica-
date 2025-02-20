@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elenco Utenti</title>
+</head>
+<body>
+    <h2>Elenco Degli Utenti Registrati</h2>
+    <ul id="userList"></ul>
+
+    <script>
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        const userList = document.getElementById('userList');
+
+        if (users.length === 0) {
+            userList.innerHTML = '<li>Nessun utente registrato</li>';
+        } else {
+            users.forEach(user => {
+                const li = document.createElement('li');
+                li.textContent = `${user.name}, ${user.age} anni, ${user.email}`;
+                userList.appendChild(li);
+            });
+        }
+    </script>
+</body>
+</html>
