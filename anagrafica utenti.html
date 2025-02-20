@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anagrafica Utenti</title>
+</head>
+<body>
+    <h2>Creazione Del Nuovo Utente</h2>
+    <form id="userForm">
+        <label for="name">Nome:</label>
+        <input type="text" id="name" required><br><br>
+
+        <label for="age">Età:</label>
+        <input type="number" id="age" required><br><br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" required><br><br>
+
+        <button type="submit">Aggiungi Utente</button>
+    </form>
+
+    <h2>Elenco Degli Utenti Registrati</h2>
+    <ul id="userList"></ul>
+
+    <button id="viewUsers">Visualizza utenti in una nuova pagina</button>
+
+    <script>
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+
+        const userForm = document.getElementById('userForm');
+        const userList = document.getElementById('userList');
+        const viewUsersButton = document.getElementById('viewUsers');
+
+        const displayUsers = () => {
+            userList.innerHTML = '';
+            if (users.length === 0) {
+                userList.innerHTML = '<li>Nessun utente registrato</li>';
+            } else {
+                users.forEach(user => {
+                    const li = document.createElement('li');
+                    li.textContent = `${user.name}, ${user.age} anni, ${user.email}`;
+                    userList.appendChild(li);
+                });
+            }
+        };
+
+        userForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const age = document.getElementById('age').value;
+            const email = document.getElementById('email').value;
+
+            const newUser = { name, age, email };
+
+            users.push(newUser);
+
+            localStorage.setItem('users', JSON.stringify(users));
+
+            userForm.reset();
+            displayUsers();
+
+          
+            window.location.href = "users.html"; // Apre la nuova pagina
+        });
+
+        viewUsersButton.addEventListener('click', () => {
+            const newWindow = window.open('', '_blank', 'width=600,height=400');
+            const usersInNewWindow = JSON.parse(localStorage.getItem('users')) || [];
+            
+            newWindow.document.write('<h2>Elenco Degli Utenti Registrati</h2>');
+            if (usersInNewWindow.length === 0) {
+                newWindow.document.write('<p>Nessun utente registrato</p>');
+            } else {
+                const ul = newWindow.document.createElement('ul');
+                usersInNewWindow.forEach(user => {
+                    const li = newWindow.document.createElement('li');
+                    li.textContent = `${user.name}, ${user.age} anni, ${user.email}`;
+                    ul.appendChild(li);
+                });
+                newWindow.document.body.appendChild(ul);
+            }
+        });
+
+        displayUsers();
+    </script>
+</body>
+</html>
